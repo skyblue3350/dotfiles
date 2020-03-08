@@ -4,3 +4,4 @@
     ansible_connection: local
   roles:
     - ghq
+    - rcfile

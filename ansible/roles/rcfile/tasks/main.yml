@@ -1,0 +1,22 @@
+- name: get config dir stat
+  local_action: stat path={{ role_path }}/files/{{ item }}/.{{ item }}
+  with_items:
+    - "{{ rcfiles }}"
+  register: exitsts
+
+- name: copy config dir if exists
+  copy:
+    src: "{{ item.stat.path }}"
+    dest: ~/
+    mode: 0755
+  when: item.stat.exists
+  with_items:
+    - "{{ exitsts.results }}"
+
+- name: copy rcfiles
+  copy:
+    src: "files/{{ item }}/.{{ item }}rc"
+    dest: ~/.{{ item }}rc
+    mode: 0755
+  with_items:
+    - "{{ rcfiles }}"
