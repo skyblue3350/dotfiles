@@ -1,0 +1,10 @@
+packages:
+  - repo: x-motemen/ghq
+    version: v1.1.0
+    file: "ghq_{{ ansible_system | lower }}_amd64.zip"
+    binary: "ghq_{{ ansible_system | lower }}_amd64/ghq"
+  - repo: junegunn/fzf-bin
+    version: 0.20.0
+    file: "fzf-0.20.0-{{ ansible_system | lower }}_amd64.tgz"
+    binary: "fzf"
+

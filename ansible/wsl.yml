@@ -3,5 +3,5 @@
   vars:
     ansible_connection: local
   roles:
-    - ghq
+    - tools
     - rcfile
