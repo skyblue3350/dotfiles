@@ -1,0 +1,100 @@
+- name: homebrew update
+  homebrew:
+    update_homebrew: yes
+
+- name: homebrew tap
+  homebrew_tap:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ taps }}"
+
+- name: homebrew packages install
+  homebrew:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default('present') }}"
+  with_items: "{{ packages }}"
+
+- name: homebrew cask packages install
+  homebrew_cask:
+    name: "{{ item }}"
+    state: installed
+  with_items: "{{ cask_packages }}"
+
+# todo: [fix] use osx_defaults see: https://github.com/ansible/ansible/pull/24808
+- name: disable keyboard shortcuts
+  shell: "defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add {{ item }} '<dict><key>enabled</key><false/></dict>'"
+  with_items:
+    # Desktop - F11
+    - 36
+    # Turn Dock Hiding On/Off - Command, Option, D
+    - 52
+    # Select the next source in the Input Menu - Command, Option, Shift, Space
+    - 61
+    # Show Spotlight search field - Command, Shift, Space
+    - 64
+    # Show Spotlight window - Control, Shift, Space
+    - 65
+    # Mission Control Left - Control, Left
+    - 79
+    # Mission Control Right - Control. Right
+    - 81
+    # Mission Control Down - Control, Down
+    - 83
+    # Mission Control Up - Control, Up
+    - 85
+
+- name: change keyboard shortcuts
+  shell: "defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add {{ item.id }} '<dict><key>enabled</key><true/><key>value</key><dict><key>parameters</key><array>{% for key in item['keys'] %}<integer>{{ key }}</integer>{% endfor %}</array><key>type</key><string>standard</string></dict></dict>'"
+  with_items:
+    # Select the previous input source
+    - id: 60
+      keys:
+        - 32
+        - 49
+        - 1048576
+
+- name: remove dock icon
+  shell: "dockutil --remove '{{ item }}'"
+  with_items:
+    # see: dockutil --list
+    - Launchpad
+    - Safari
+    - メール
+    - FaceTime
+    - メッセージ
+    - マップ
+    - 写真
+    - 連絡先
+    - カレンダー
+    - リマインダー
+    - メモ
+    - ミュージック
+    - Podcast
+    - TV
+    - Numbers
+    - Keynote
+    - Pages
+    - App Store
+    - ダウンロード
+
+- name: add dock icon
+  shell : "dockutil --add '/Applications/{{ item }}.app/'"
+  with_items:
+    - iTerm
+  ignore_errors: yes
+
+- name: set dock config
+  osx_defaults:
+    domain: com.apple.dock
+    key: show-recents
+    state: present
+    type: bool
+    value: false
+
+- name: set dock size
+  osx_defaults:
+    domain: com.apple.dock
+    key: tilesize
+    state: present
+    type: integer
+    value: 45

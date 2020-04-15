@@ -1,0 +1,20 @@
+taps: []
+packages:
+  - name: gnu-tar
+  - name: dockutil
+cask_packages:
+  - google-chrome
+  - discord
+  - 1password
+  - visual-studio-code
+  - alfred
+  - iterm2
+  - google-japanese-ime
+  - spectacle
+  - karabiner-elements
+  - docker
+  - docker-compose
+  - anyenv
+  - zplug
+  - ticktick
+  - slack

@@ -20,3 +20,20 @@
     mode: 0755
   with_items:
     - "{{ rcfiles }}"
+
+- debug: var=role_path
+
+- name: create config dir for mac
+  file:
+    path: "~/.config/{{ item.name }}"
+    state: directory
+  with_items: "{{ mac.config }}"
+  when: ansible_system == 'Darwin'
+
+- name: copy config file for mac
+  file:
+    dest: "~/.config/{{ item.name }}/{{ item.file }}"
+    src: "{{ role_path }}/files/mac/{{ item.file }}"
+    state: link
+  with_items: "{{ mac.config }}"
+  when: ansible_system == 'Darwin'

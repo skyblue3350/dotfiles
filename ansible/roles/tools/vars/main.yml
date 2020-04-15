@@ -1,3 +1,6 @@
+owner: "{% if ansible_system == 'Darwin' %}{{ ansible_user }}{% else %}root{% endif %}"
+group: "{% if ansible_system == 'Darwin' %}admin{% else %}root{% endif %}"
+
 packages:
   - repo: x-motemen/ghq
     version: v1.1.0

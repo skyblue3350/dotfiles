@@ -1,3 +1,8 @@
 rcfiles:
   - vim
   - bash
+
+mac:
+  config:
+    - name: karabiner
+      file: karabiner.json
